@@ -1,4 +1,5 @@
 ﻿using CURDUSingAPIEFCore.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 
 namespace CURDUSingAPIEFCore.Repositories
@@ -35,10 +36,16 @@ namespace CURDUSingAPIEFCore.Repositories
             return await this.cc.Products.ToListAsync();
         }
 
+        public async Task PatchProduct(JsonPatchDocument<Product> rec, Product oldrec)
+        {
+            rec.ApplyTo(oldrec);
+            await this.cc.SaveChangesAsync();
+        }
+
         public async Task UpdateProduct(Product product)
         {
           this.cc.Products.Update(product);
-           await this.cc.SaveChangesAsync();
+          await this.cc.SaveChangesAsync();
         }
     }
 }

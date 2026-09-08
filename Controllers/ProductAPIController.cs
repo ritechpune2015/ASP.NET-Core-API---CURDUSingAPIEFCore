@@ -1,6 +1,7 @@
 ﻿using CURDUSingAPIEFCore.Models;
 using CURDUSingAPIEFCore.Repositories;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -23,7 +24,16 @@ namespace CURDUSingAPIEFCore.Controllers
             var res = await this.repo.GetProducts();
             if (res == null)
                 return BadRequest();
-            return Ok(res);   
+            return Ok(res);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProducts(Int64 id)
+        {
+            var res = await this.repo.GetProductById(id);
+            if (res == null)
+                return NotFound("Product Not Found!");
+            return Ok(res);
         }
 
         [HttpPost]
@@ -33,7 +43,8 @@ namespace CURDUSingAPIEFCore.Controllers
             if (res == null)
                 return BadRequest();
             // return Created();
-            return Created("/api/ProductAPI", res);
+            //  return Created("/api/ProductAPI", res);
+            return Ok("Product Created!");
         }
 
         [HttpPut()]
@@ -54,5 +65,17 @@ namespace CURDUSingAPIEFCore.Controllers
           await this.repo.DeleteProduct(id);
             return NoContent();
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateCustomer(Int64 id,JsonPatchDocument<Product> rec)
+        {
+            var oldrec = await this.repo.GetProductById(id);
+            if (oldrec == null)
+                return BadRequest();
+
+            await this.repo.PatchProduct(rec, oldrec);
+            return Ok("Product updated!");
+        }
+
     }
 }
