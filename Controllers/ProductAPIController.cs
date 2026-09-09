@@ -54,7 +54,8 @@ namespace CURDUSingAPIEFCore.Controllers
                 return BadRequest();
 
             await this.repo.UpdateProduct(rec);
-            return NoContent();
+            //return NoContent();
+            return Ok("Product Updated!");
         }
 
 
@@ -63,7 +64,8 @@ namespace CURDUSingAPIEFCore.Controllers
         { 
           if(id==0) return BadRequest();
           await this.repo.DeleteProduct(id);
-            return NoContent();
+            // return NoContent();
+            return Ok("Product Deleted!");
         }
 
         [HttpPatch("{id}")]
